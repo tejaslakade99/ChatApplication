@@ -1,0 +1,248 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <script src=" {% static 'js/script.js' %}"></script>
+  <title>Group Chat</title>
+</head>
+
+<body>
+  <section>
+    <div class="profile-box">
+      <div class="profile-header">
+        <h3>Chat</h3>
+      </div>
+
+      <div class="profile-details">
+        <img
+          src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="Profile Picture" class="profile-image">
+        <h1> <a href="{% url 'account_logout' %}">James Anderson</a>J</h1>
+        <input type="text" placeholder="Search" class="search-input">
+      </div>
+
+      <div class="chat-options">
+        <p>Last Chats</p>
+        <div class="chat-btns">
+          <button class="chat-btn chat-add">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#571BE2">
+              <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+            </svg>
+          </button>
+          <button class="chat-btn chat-more">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#C1C7CF">
+              <path
+                d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="chat-list">
+        <ul id="my-list">
+          <li>
+            <div class="chat-person-info">
+              <img src="https://i.pinimg.com/736x/d4/38/0a/d4380abf592588cb604c60fabefad6e4.jpg" alt="Tony Stark"
+                class="chat-avatar">
+              <div class="chat-details">
+                <h3>Meow Mates 🐾😻</h3>
+                <p>I'm buying your car.</p>
+              </div>
+            </div>
+            <p class="time">11:25 PM</p>
+          </li>
+          <li>
+            <div class="chat-person-info">
+              <img src="https://i.pinimg.com/736x/bf/4b/39/bf4b399f95e00c09e275f31c6505e8e2.jpg" alt="Tony Stark"
+                class="chat-avatar">
+              <div class="chat-details">
+                <h3>Tony Stark</h3>
+                <p>I'm buying your car.</p>
+              </div>
+            </div>
+            <p class="time">11:25 PM</p>
+          </li>
+          <li>
+            <div class="chat-person-info">
+              <img src="https://i.pinimg.com/736x/4f/91/70/4f91704c0e5155f99f5cbfa8c2e5443d.jpg" alt="Tony Stark"
+                class="chat-avatar">
+              <div class="chat-details">
+                <h3>Avengers</h3>
+                <p>I'm buying your car.</p>
+              </div>
+            </div>
+            <p class="time">11:25 PM</p>
+          </li>
+          <li>
+            <div class="chat-person-info">
+              <img src="https://i.pinimg.com/736x/f5/43/7f/f5437f9af24444706b97edb345fdc727.jpg" alt="Tony Stark"
+                class="chat-avatar">
+              <div class="chat-details">
+                <h3>Steven Rogers</h3>
+                <p>I'm buying your car.</p>
+              </div>
+            </div>
+            <p class="time">11:25 PM</p>
+          </li>
+          <li>
+            <div class="chat-person-info">
+              <img src="https://i.pinimg.com/736x/07/48/31/07483148dbe35e84d0e4c8e6457a5001.jpg" alt="Tony Stark"
+                class="chat-avatar">
+              <div class="chat-details">
+                <h3>Bone Brothers 💀👻</h3>
+                <p>I'm buying your car.</p>
+              </div>
+            </div>
+            <p class="time">11:25 PM</p>
+          </li>
+
+          <!-- Repeat other chat list items as needed -->
+        </ul>
+      </div>
+    </div>
+
+    <div class="chat-box">
+      <!-- Chat Header -->
+      <div class="chat-header">
+        <h3>Group Chat</h3>
+        <div class="chat-right-header">
+          <h4 id="messages" onclick="hideParticipants();" class="selected">Messages</h4>
+          <h4 id="participants" onclick="hideChat();">Participants</h4>
+        </div>
+      </div>
+
+      <!-- Chat Section -->
+      <div id="chat-section" class="chat-section">
+        <ul>
+          <!-- Left Message -->
+          <li class="message flex-start">
+            <span>Tejas Lakade, 11:25 PM</span>
+            <p>Hey everyone, let's start the call soon!</p>
+          </li>
+          <!-- Right Message -->
+          <li class="message flex-start">
+            <span>Tejas Lakade, 11:26 PM</span>
+            <p>Recently I saw properties in a great location that I did not pay attention to before</p>
+          </li>
+          <!-- Left Message -->
+          <li class="message flex-start">
+            <span>Rohan Kale, 11:28 PM</span>
+            <p>Ooo, why don't you say somethin more</p>
+          </li>
+          <!-- Right Message -->
+          <li class="message flex-end">
+            <span>You, 1:00 PM</span>
+            <p>He creates an atmosphere of mystery</p>
+          </li>
+          <!-- Left Message -->
+          <li class="message flex-start">
+            <span>Tejas Lakade, 11:25 PM</span>
+            <p>Rohan, don't be like that and say something more :)</p>
+          </li>
+          <!-- Right Message -->
+          <li class="message flex-end">
+            <span>You, 1:00 PM</span>
+            <p>How are you?</p>
+          </li>
+          <!-- Left Message -->
+          <li class="message flex-start">
+            <span>Tejas Lakade, 11:25 PM</span>
+            <p>Hello, Brother!</p>
+          </li>
+          <!-- Right Message -->
+          <li class="message flex-end">
+            <span>You, 1:00 PM</span>
+            <p>How are you?</p>
+          </li>
+        </ul>
+      </div>
+      <div id="chat-input" class="chat-input">
+        <input type="text" placeholder="Write your message...">
+        <button><svg width="16px" height="16px" viewBox="0 0 20 18" version="1.1" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink">
+            <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+            <title>send</title>
+            <desc>Created with Sketch.</desc>
+            <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Rounded" transform="translate(-374.000000, -1529.000000)">
+                <g id="Content" transform="translate(100.000000, 1428.000000)">
+                  <g id="-Round-/-Content-/-send" transform="translate(272.000000, 98.000000)">
+                    <g>
+                      <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+                      <path
+                        d="M3.4,20.4 L20.85,12.92 C21.66,12.57 21.66,11.43 20.85,11.08 L3.4,3.6 C2.74,3.31 2.01,3.8 2.01,4.51 L2,9.12 C2,9.62 2.37,10.05 2.87,10.11 L17,12 L2.87,13.88 C2.37,13.95 2,14.38 2,14.88 L2.01,19.49 C2.01,20.2 2.74,20.69 3.4,20.4 Z"
+                        id="🔹Icon-Color" fill="#FFFFFF"></path>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg></button>
+      </div>
+
+      <!-- Participant Section -->
+
+      <div id="chat-participants" class="chat-participants hidden">
+        <ul>
+          <li>
+            <div class="chat-participants-avatar">
+              <img
+                src="https://images.unsplash.com/photo-1546961329-78bef0414d7c?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                width="80px" height="80px" alt="">
+              <span class="status-dot online"></span>
+            </div>
+            <p>Emily Johnson</p>
+          </li>
+          <li>
+            <div class="chat-participants-avatar">
+              <img
+                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                width="80px" height="80px" alt="">
+              <span class="status-dot offline"></span>
+            </div>
+            <p>Sophia Williams</p>
+          </li>
+          <li>
+            <div class="chat-participants-avatar">
+              <img
+                src="https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                width="80px" height="80px" alt="">
+              <span class="status-dot online"></span>
+            </div>
+            <p>Sophia Williams</p>
+          </li>
+          <li>
+            <div class="chat-participants-avatar">
+              <img
+                src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                width="80px" height="80px" alt="">
+              <span class="status-dot offline"></span>
+            </div>
+            <p>Tejas Lakade</p>
+          </li>
+          <li>
+            <div class="chat-participants-avatar">
+              <img
+                src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=1727&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                width="80px" height="80px" alt="">
+              <span class="status-dot online"></span>
+            </div>
+            <p>Olivia Brown</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</body>
+
+</html>
