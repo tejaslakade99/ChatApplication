@@ -1,0 +1,11 @@
+{% if chat.author == user %}
+<li class="message flex-end">
+  <span>You, {{chat.created|time:"h:i A"}}</span>
+  <p>{{ chat.body}}</p>
+</li>
+{% else %}
+<li class="message flex-start">
+  <span>{{chat.author.username}}, {{chat.created|time:"h:i A"}}</span>
+  <p>{{ chat.body }}</p>
+</li>
+{% endif %}

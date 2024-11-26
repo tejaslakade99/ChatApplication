@@ -4,3 +4,4 @@ from .models import *
 
 admin.site.register(GroupChat)
 admin.site.register(GroupMessages)
+admin.site.register(Profile)

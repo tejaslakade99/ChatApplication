@@ -16,6 +16,14 @@
 </head>
 
 <body>
+    {% if messages %}
+    <div class="notification-box" role="alert">
+        <strong>{% trans "Messages:" %}</strong>
+        <ul>
+            {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+        </ul>
+    </div>
+    {% endif %}
     <div class="signin-container">
         {% block content %}
         {% endblock content %}

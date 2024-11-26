@@ -376,50 +376,42 @@ section {
   border-radius: 12px;
 }
 
-.signin-container {
-  background: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  font-family: "Poppins";
+.notification-box {
+  position: fixed; /* Ensures it's fixed to the viewport */
+  top: 16px; /* Distance from the top */
+  right: 16px; /* Distance from the right */
+  background-color: #d4edda; /* Light green background for success messages */
+  border: 1px solid #c3e6cb; /* Green border */
+  color: #155724; /* Dark green text color */
+  padding: 16px; /* Padding inside the box */
+  border-radius: 8px; /* Rounded corners */
+  max-width: 300px; /* Restrict the width */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Slight shadow for elevation */
+  z-index: 1000; /* Ensures it appears above other elements */
+  font-family: Arial, sans-serif; /* Optional for consistent font */
+  font-size: 14px; /* Optional for readability */
+  animation: fadeOut 3s ease-in-out forwards;
 }
 
-.signin-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #571be2;
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 
-.signin-form p {
-  margin-bottom: 15px;
+.notification-box ul {
+  margin: 8px 0 0; /* Space above the list */
+  padding: 0; /* Remove default list padding */
+  padding-left: 0px; /* Indent bullets */
 }
-
-.signin-form p label {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 14px;
-  color: #555;
-}
-
-.signin-form p input {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #571be2;
-  color: #ffffff;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
+.notification-box li {
+  list-style: none;
+  margin-bottom: 4px; /* Spacing between list items */
 }

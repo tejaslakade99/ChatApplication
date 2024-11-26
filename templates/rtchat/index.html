@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -13,28 +14,42 @@
     rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <script src=" {% static 'js/script.js' %}"></script>
+  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+  <script src="https://unpkg.com/hyperscript.org@0.9.13"></script>
   <title>Group Chat</title>
 </head>
 
 <body>
+  {% if messages %}
+  <div class="notification-box" role="alert">
+    <strong>{% trans "Messages:" %}</strong>
+    <ul>
+      {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
   <section>
     <div class="profile-box">
-      <div class="profile-header">
+      <div class="chat-header">
         <h3>Chat</h3>
+        <a class="chat-btn chat-add" title="Logout" href="{% url 'account_logout' %}">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#571BE2">
+            <path
+              d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h280v80H200v560h280v80H200Zm440-160-55-58 102-102H360v-80h327L585-622l55-58 200 200-200 200Z" />
+          </svg>
+        </a>
       </div>
 
       <div class="profile-details">
-        <img
-          src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=2662&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="Profile Picture" class="profile-image">
-        <h1> <a href="{% url 'account_logout' %}">James Anderson</a>J</h1>
+        <img src="{{avatar.avatar}}" alt="Profile Picture" class="profile-image">
+        <h1>{{ user.username }}</h1>
         <input type="text" placeholder="Search" class="search-input">
       </div>
 
       <div class="chat-options">
         <p>Last Chats</p>
         <div class="chat-btns">
-          <button class="chat-btn chat-add">
+          <button class="chat-btn chat-add" title="Create Group">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#571BE2">
               <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
             </svg>
@@ -123,52 +138,18 @@
 
       <!-- Chat Section -->
       <div id="chat-section" class="chat-section">
-        <ul>
-          <!-- Left Message -->
-          <li class="message flex-start">
-            <span>Tejas Lakade, 11:25 PM</span>
-            <p>Hey everyone, let's start the call soon!</p>
-          </li>
-          <!-- Right Message -->
-          <li class="message flex-start">
-            <span>Tejas Lakade, 11:26 PM</span>
-            <p>Recently I saw properties in a great location that I did not pay attention to before</p>
-          </li>
-          <!-- Left Message -->
-          <li class="message flex-start">
-            <span>Rohan Kale, 11:28 PM</span>
-            <p>Ooo, why don't you say somethin more</p>
-          </li>
-          <!-- Right Message -->
-          <li class="message flex-end">
-            <span>You, 1:00 PM</span>
-            <p>He creates an atmosphere of mystery</p>
-          </li>
-          <!-- Left Message -->
-          <li class="message flex-start">
-            <span>Tejas Lakade, 11:25 PM</span>
-            <p>Rohan, don't be like that and say something more :)</p>
-          </li>
-          <!-- Right Message -->
-          <li class="message flex-end">
-            <span>You, 1:00 PM</span>
-            <p>How are you?</p>
-          </li>
-          <!-- Left Message -->
-          <li class="message flex-start">
-            <span>Tejas Lakade, 11:25 PM</span>
-            <p>Hello, Brother!</p>
-          </li>
-          <!-- Right Message -->
-          <li class="message flex-end">
-            <span>You, 1:00 PM</span>
-            <p>How are you?</p>
-          </li>
+        <ul id="chat_messages">
+          {% for chat in chats reversed %}
+          {% include 'rtchat/chat_message.html' %}
+          {% endfor %}
         </ul>
       </div>
-      <div id="chat-input" class="chat-input">
-        <input type="text" placeholder="Write your message...">
-        <button><svg width="16px" height="16px" viewBox="0 0 20 18" version="1.1" xmlns="http://www.w3.org/2000/svg"
+      <form id="chat-input" class="chat-input" hx-post="{% url 'index' %}" hx-target="#chat_messages"
+        hx-swap="beforeend" _="on htmx:afterRequest reset() me">
+        {% csrf_token %}
+        {{ form.body }}
+        <button>
+          <svg width="16px" height="16px" viewBox="0 0 20 18" version="1.1" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink">
             <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
             <title>send</title>
@@ -188,7 +169,7 @@
               </g>
             </g>
           </svg></button>
-      </div>
+      </form>
 
       <!-- Participant Section -->
 
@@ -243,6 +224,13 @@
       </div>
     </div>
   </section>
+  <script>
+    function scrollToBottom() {
+      const container = document.getElementById('chat-section');
+      container.scrollTop = container.scrollHeight;
+    }
+    scrollToBottom()
+  </script>
 </body>
 
 </html>
