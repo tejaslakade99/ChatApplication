@@ -14,7 +14,9 @@
     rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <script src=" {% static 'js/script.js' %}"></script>
-  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+  <script src="{% static 'js/htmx.js' %}"></script>
+  <!-- <script src="https://unpkg.com/htmx.org"></script> -->
+  <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
   <script src="https://unpkg.com/hyperscript.org@0.9.13"></script>
   <title>Group Chat</title>
 </head>
@@ -144,8 +146,8 @@
           {% endfor %}
         </ul>
       </div>
-      <form id="chat-input" class="chat-input" hx-post="{% url 'index' %}" hx-target="#chat_messages"
-        hx-swap="beforeend" _="on htmx:afterRequest reset() me">
+      <form id="chat-input" class="chat-input" hx-ext="ws" ws-connect="/ws/groupchat/Friends" ws-send
+        _="on htmx:wsAfterSend reset() me">
         {% csrf_token %}
         {{ form.body }}
         <button>
