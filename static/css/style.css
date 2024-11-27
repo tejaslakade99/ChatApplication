@@ -71,18 +71,30 @@ section {
   margin-bottom: 10px;
 }
 
-.search-input {
+.search-input-form {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center both input and button */
+  gap: 15px; /* Space between input and button */
   width: 100%;
+}
+
+.search-input {
+  width: 85%; /* Input will take up remaining space */
   padding: 14px;
   border: none;
   border-radius: 8px;
   outline: none;
   background-color: #ecf0f4;
   font-weight: 500;
+  font-size: 13px;
 }
 
-.search-input::-webkit-input-placeholder {
-  /* Chrome/Opera/Safari */
+.search-input-form a {
+  width: 10%;
+}
+
+.search-input::placeholder {
   color: #979ca9;
 }
 

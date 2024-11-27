@@ -41,19 +41,36 @@
           </svg>
         </a>
       </div>
-
       <div class="profile-details">
         <img src="{{avatar.avatar}}" alt="Profile Picture" class="profile-image">
         <h1>{{ user.username }}</h1>
-        <input type="text" placeholder="Search" class="search-input">
-      </div>
+        <form action="" method="get" class="search-input-form" id="search-form">
+          <input type="text" id="username-input" name="username" placeholder="Create group or private chat"
+            class="search-input">
 
+          <!-- First button with a unique name -->
+          <button title="Private Chat" type="submit" name="action" value="create_chat" class="chat-btn chat-add">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#571BE2">
+              <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+            </svg>
+          </button>
+
+          <!-- Second button with a unique name -->
+          <button title="Group Chat" type="submit" name="action" value="join_chat" class="chat-btn chat-add">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#571BE2">
+              <path
+                d="M500-482q29-32 44.5-73t15.5-85q0-44-15.5-85T500-798q60 8 100 53t40 105q0 60-40 105t-100 53Zm220 322v-120q0-36-16-68.5T662-406q51 18 94.5 46.5T800-280v120h-80Zm80-280v-80h-80v-80h80v-80h80v80h80v80h-80v80h-80Zm-480-40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM0-160v-112q0-34 17.5-62.5T64-378q62-31 126-46.5T320-440q66 0 130 15.5T576-378q29 15 46.5 43.5T640-272v112H0Zm320-400q33 0 56.5-23.5T400-640q0-33-23.5-56.5T320-720q-33 0-56.5 23.5T240-640q0 33 23.5 56.5T320-560ZM80-240h480v-32q0-11-5.5-20T540-306q-54-27-109-40.5T320-360q-56 0-111 13.5T100-306q-9 5-14.5 14T80-272v32Zm240-400Zm0 400Z" />
+            </svg>
+          </button>
+        </form>
+      </div>
       <div class="chat-options">
         <p>Last Chats</p>
         <div class="chat-btns">
           <button class="chat-btn chat-add" title="Create Group">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#571BE2">
-              <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
+              <path
+                d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
             </svg>
           </button>
           <button class="chat-btn chat-more">
@@ -67,17 +84,29 @@
 
       <div class="chat-list">
         <ul id="my-list">
-          <li>
-            <div class="chat-person-info">
-              <img src="https://i.pinimg.com/736x/d4/38/0a/d4380abf592588cb604c60fabefad6e4.jpg" alt="Tony Stark"
+          <li onclick="redirectToLink('http://127.0.0.1:8000')">
+            <dix class="chat-person-info">
+              <img src="https://i.pinimg.com/736x/07/48/31/07483148dbe35e84d0e4c8e6457a5001.jpg" alt="Tony Stark"
                 class="chat-avatar">
               <div class="chat-details">
-                <h3>Meow Mates 🐾😻</h3>
+                <h3>Friends</h3>
                 <p>I'm buying your car.</p>
               </div>
-            </div>
+            </dix>
             <p class="time">11:25 PM</p>
           </li>
+          {% for chat in private_chats %}
+          <li onclick="redirectToLink('/chat/room/{{chat.group_name}}')">
+            <dix class="chat-person-info">
+              <img src="{{chat.other_user_avatar}}" alt="Tony Stark" class="chat-avatar">
+              <div class="chat-details">
+                <h3>{{chat.other_user}}</h3>
+                <p>I'm buying your car.</p>
+              </div>
+            </dix>
+            <p class="time">11:25 PM</p>
+          </li>
+          {% endfor %}
           <li>
             <div class="chat-person-info">
               <img src="https://i.pinimg.com/736x/bf/4b/39/bf4b399f95e00c09e275f31c6505e8e2.jpg" alt="Tony Stark"
@@ -131,7 +160,11 @@
     <div class="chat-box">
       <!-- Chat Header -->
       <div class="chat-header">
+        {% if other_user %}
+        <h3>{{other_user.username}}</h3>
+        {% else %}
         <h3>Group Chat</h3>
+        {% endif %}
         <div class="chat-right-header">
           <h4 id="messages" onclick="hideParticipants();" class="selected">Messages</h4>
           <h4 id="participants" onclick="hideChat();">Participants</h4>
@@ -146,7 +179,7 @@
           {% endfor %}
         </ul>
       </div>
-      <form id="chat-input" class="chat-input" hx-ext="ws" ws-connect="/ws/groupchat/Friends/" ws-send
+      <form id="chat-input" class="chat-input" hx-ext="ws" ws-connect="/ws/groupchat/{{group_name}}/" ws-send
         _="on htmx:wsAfterSend reset() me">
         {% csrf_token %}
         {{ form.body }}
@@ -224,6 +257,38 @@
     }
     scrollToBottom()
   </script>
+  <script>
+    document.getElementById('search-form').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      var username = document.getElementById('username-input').value; // Get the username value
+      var action = event.submitter.value; // Get the value of the clicked button (either 'create_chat' or 'join_chat')
+
+      if (username) {
+        var url = '';
+
+        // Perform different actions based on which button was clicked
+        if (action === 'create_chat') {
+          // Action for the first button
+          url = '/chat/' + username + '/'; // Adjust the URL as needed
+          console.log("Creating chat at URL:", url);
+        } else if (action === 'join_chat') {
+          // Action for the second button
+          url = '/chat/join/' + username + '/'; // Adjust the URL as needed
+          console.log("Joining chat at URL:", url);
+        }
+
+        window.location.href = url; // Redirect to the constructed URL
+      } else {
+        console.error("Username is required!");
+      }
+    });
+
+    function redirectToLink(url) {
+      window.location.href = url;
+    }
+  </script>
+
 </body>
 
 </html>
