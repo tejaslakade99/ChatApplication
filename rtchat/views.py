@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from .models import *
 from .forms import *
 
@@ -25,5 +25,4 @@ def index(request):
       }
       return render(request, 'partials/chat_message_p.html', context)
       
-  return render(request, 'rtchat/index.html', {'avatar':avatar, 'chats':chats, 'form':form})
-    
+  return render(request, 'rtchat/index.html', {'avatar':avatar, 'chats':chats, 'form':form, 'user': request.user})
