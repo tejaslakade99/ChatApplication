@@ -18,7 +18,7 @@
   <!-- <script src="https://unpkg.com/htmx.org"></script> -->
   <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
   <script src="https://unpkg.com/hyperscript.org@0.9.13"></script>
-  <title>Group Chat</title>
+  <title>Chat Application</title>
 </head>
 
 <body>
@@ -84,7 +84,7 @@
 
       <div class="chat-list">
         <ul id="my-list">
-          <li onclick="redirectToLink('http://127.0.0.1:8000/chat/room/Friends/')">
+          <li onclick="redirectToLink('/chat/room/Friends/')">
             <dix class="chat-person-info">
               <img src="https://i.pinimg.com/736x/07/48/31/07483148dbe35e84d0e4c8e6457a5001.jpg" alt="Tony Stark"
                 class="chat-avatar">
@@ -190,7 +190,7 @@
         hx-post="{% url 'add-in-group' groupname=group_chat.group_name %}" hx-target="#online_users" hx-swap="innerHTML"
         _="on htmx:afterRequest reset() me">
         {% csrf_token %}
-        <input type="text" placeholder="Enter username" name="user" id="user-input">
+        <input type="text" placeholder="Enter Username to Add or Remove" name="user" id="user-input">
 
         <!-- First Button -->
         <button type="button" hx-post="{% url 'add-in-group' groupname=group_chat.group_name %}"
