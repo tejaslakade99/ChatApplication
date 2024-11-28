@@ -84,16 +84,17 @@
 
       <div class="chat-list">
         <ul id="my-list">
-          <li onclick="redirectToLink('http://127.0.0.1:8000')">
+          <li onclick="redirectToLink('http://127.0.0.1:8000/chat/room/Friends/')">
             <dix class="chat-person-info">
               <img src="https://i.pinimg.com/736x/07/48/31/07483148dbe35e84d0e4c8e6457a5001.jpg" alt="Tony Stark"
                 class="chat-avatar">
               <div class="chat-details">
-                <h3>Friends</h3>
-                <p>I'm buying your car.</p>
+                <h3>For Everyone</h3>
+                <p>{{ friendsGroup.body|default:"No messages yet"|slice:":30" }}{% if friendsGroup.body|length > 20%}...
+                {% endif %}</p>
               </div>
             </dix>
-            <p class="time">11:25 PM</p>
+            <p class="time">{{friendsGroup.created|date:"h:i A"}}</p>
           </li>
           {% for chat in private_chats %}
           <li onclick="redirectToLink('/chat/room/{{chat.group_name}}')">
@@ -101,57 +102,27 @@
               <img src="{{chat.other_user_avatar}}" alt="Tony Stark" class="chat-avatar">
               <div class="chat-details">
                 <h3>{{chat.other_user}}</h3>
-                <p>I'm buying your car.</p>
+                <p>{{ chat.last_message|default:"No messages yet"|slice:":30" }}{% if chat.last_message|length > 20%}...
+                  {% endif %}</p>
               </div>
             </dix>
-            <p class="time">11:25 PM</p>
+            <p class="time">{{chat.time|date:"h:i A"}}</p>
           </li>
           {% endfor %}
-          <li>
-            <div class="chat-person-info">
-              <img src="https://i.pinimg.com/736x/bf/4b/39/bf4b399f95e00c09e275f31c6505e8e2.jpg" alt="Tony Stark"
-                class="chat-avatar">
-              <div class="chat-details">
-                <h3>Tony Stark</h3>
-                <p>I'm buying your car.</p>
-              </div>
-            </div>
-            <p class="time">11:25 PM</p>
-          </li>
-          <li>
-            <div class="chat-person-info">
-              <img src="https://i.pinimg.com/736x/4f/91/70/4f91704c0e5155f99f5cbfa8c2e5443d.jpg" alt="Tony Stark"
-                class="chat-avatar">
-              <div class="chat-details">
-                <h3>Avengers</h3>
-                <p>I'm buying your car.</p>
-              </div>
-            </div>
-            <p class="time">11:25 PM</p>
-          </li>
-          <li>
-            <div class="chat-person-info">
-              <img src="https://i.pinimg.com/736x/f5/43/7f/f5437f9af24444706b97edb345fdc727.jpg" alt="Tony Stark"
-                class="chat-avatar">
-              <div class="chat-details">
-                <h3>Steven Rogers</h3>
-                <p>I'm buying your car.</p>
-              </div>
-            </div>
-            <p class="time">11:25 PM</p>
-          </li>
-          <li>
-            <div class="chat-person-info">
-              <img src="https://i.pinimg.com/736x/07/48/31/07483148dbe35e84d0e4c8e6457a5001.jpg" alt="Tony Stark"
-                class="chat-avatar">
-              <div class="chat-details">
-                <h3>Bone Brothers 💀👻</h3>
-                <p>I'm buying your car.</p>
-              </div>
-            </div>
-            <p class="time">11:25 PM</p>
-          </li>
 
+          {% for chat in all_group_chats %}
+          <li onclick="redirectToLink('/chat/room/{{chat.group_name}}')">
+            <dix class="chat-person-info">
+              <img src="{{chat.group_avatar}}" alt="Tony Stark" class="chat-avatar">
+              <div class="chat-details">
+                <h3>{{chat.group_chat_name}}</h3>
+                <p>{{ chat.last_message|default:"No messages yet"|slice:":30" }}{% if chat.last_message|length > 20%}...{% endif %}
+                </p>
+              </div>
+            </dix>
+            <p class="time">{{chat.time|date:"h:i A"}}</p>
+          </li>
+          {% endfor %}
           <!-- Repeat other chat list items as needed -->
         </ul>
       </div>
@@ -160,10 +131,12 @@
     <div class="chat-box">
       <!-- Chat Header -->
       <div class="chat-header">
-        {% if other_user %}
+        {% if group_chat.group_chat_name %}
+        <h3>{{group_chat.group_chat_name}}</h3>
+        {% elif other_user %}
         <h3>{{other_user.username}}</h3>
         {% else %}
-        <h3>Group Chat</h3>
+        <h3>For Everyone</h3>
         {% endif %}
         <div class="chat-right-header">
           <h4 id="messages" onclick="hideParticipants();" class="selected">Messages</h4>
@@ -210,44 +183,39 @@
 
       <div id="chat-participants" class="chat-participants hidden">
         <ul id="online_users">
-          <li>
-            <div class="chat-participants-avatar">
-              <img
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=2942&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                width="80px" height="80px" alt="">
-              <span class="status-dot offline"></span>
-            </div>
-            <p>Sophia Williams</p>
-          </li>
-          <li>
-            <div class="chat-participants-avatar">
-              <img
-                src="https://images.unsplash.com/photo-1512485694743-9c9538b4e6e0?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                width="80px" height="80px" alt="">
-              <span class="status-dot online"></span>
-            </div>
-            <p>Sophia Williams</p>
-          </li>
-          <li>
-            <div class="chat-participants-avatar">
-              <img
-                src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=2960&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                width="80px" height="80px" alt="">
-              <span class="status-dot offline"></span>
-            </div>
-            <p>Tejas Lakade</p>
-          </li>
-          <li>
-            <div class="chat-participants-avatar">
-              <img
-                src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=1727&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                width="80px" height="80px" alt="">
-              <span class="status-dot online"></span>
-            </div>
-            <p>Olivia Brown</p>
-          </li>
         </ul>
       </div>
+      {% if group_chat.admin.username == user.username %}
+      <form id="participants-input" class="chat-input hidden"
+        hx-post="{% url 'add-in-group' groupname=group_chat.group_name %}" hx-target="#online_users" hx-swap="innerHTML"
+        _="on htmx:afterRequest reset() me">
+        {% csrf_token %}
+        <input type="text" placeholder="Enter username" name="user" id="user-input">
+
+        <!-- First Button -->
+        <button type="button" hx-post="{% url 'add-in-group' groupname=group_chat.group_name %}"
+          hx-vals="{'user': document.getElementById('user-input').value}" hx-target="#online_users" hx-swap="innerHTML"
+          _="on htmx:afterRequest reset() me">
+          <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 -960 960 960" width="16px">
+            <path
+              d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"
+              fill="#FFFFFF" />
+          </svg>
+        </button>
+
+        <!-- Second Button -->
+        <button type="button" hx-post="{% url 'remove-in-group' groupname=group_chat.group_name %}"
+          hx-vals="{'user': document.getElementById('user-input').value}" hx-target="#online_users" hx-swap="innerHTML"
+          _="on htmx:afterRequest reset() me">
+          <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e8eaed">
+            <path
+              d="M624-504v-72h240v72H624Zm-240 24q-60 0-102-42t-42-102q0-60 42-102t102-42q60 0 102 42t42 102q0 60-42 102t-102 42ZM96-192v-92q0-25.78 12.5-47.39T143-366q55-32 116-49t125-17q64 0 125 17t116 49q22 13 34.5 34.61T672-284v92H96Zm72-72h432v-20q0-6.47-3.03-11.76-3.02-5.3-7.97-8.24-47-27-99-41.5T384-360q-54 0-106 14.5T179-304q-4.95 2.94-7.98 8.24Q168-290.47 168-284v20Zm216.21-288Q414-552 435-573.21t21-51Q456-654 434.79-675t-51-21Q354-696 333-674.79t-21 51Q312-594 333.21-573t51 21Zm-.21-73Zm0 361Z" />
+          </svg>
+        </button>
+      </form>
+
+
+      {% endif %}
     </div>
   </section>
   <script>
@@ -274,7 +242,7 @@
           console.log("Creating chat at URL:", url);
         } else if (action === 'join_chat') {
           // Action for the second button
-          url = '/chat/join/' + username + '/'; // Adjust the URL as needed
+          url = '/chat/group/' + username + '/'; // Adjust the URL as needed
           console.log("Joining chat at URL:", url);
         }
 

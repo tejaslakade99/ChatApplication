@@ -2,18 +2,14 @@ from channels.generic.websocket import WebsocketConsumer
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from asgiref.sync import async_to_sync
-from datetime import datetime
 from .models import *
 import json
-import time
 
 class GroupChatConsumer(WebsocketConsumer):
   
   def connect(self):
-    print("connected")
     self.user = self.scope['user']
     self.groupchat_name = self.scope['url_route']['kwargs']['groupchat_name']
-    # self.groupchat = get_object_or_404(GroupChat, group_name=self.groupchat_name)
     self.groupchat = get_object_or_404(GroupChat, group_name=self.groupchat_name)
  
     async_to_sync(self.channel_layer.group_add)(
@@ -37,7 +33,7 @@ class GroupChatConsumer(WebsocketConsumer):
     # remove and update online users
     if self.user in self.groupchat.users_online.all():
       self.groupchat.users_online.remove(self.user)
-      self.groupchat.save() 
+      self.groupchat.save()
       self.update_online_users()
     print("Online users after disconnect:", self.groupchat.users_online.all())
     
@@ -45,9 +41,8 @@ class GroupChatConsumer(WebsocketConsumer):
     try:
       text_data_json = json.loads(text_data)
       body = text_data_json['body']
-      print(body)
+
       self.groupchat.refresh_from_db()
-      print(self.groupchat.users_online.all())
   
       chat = GroupMessages.objects.create(
           body=body,
@@ -62,10 +57,9 @@ class GroupChatConsumer(WebsocketConsumer):
       async_to_sync(self.channel_layer.group_send)(
           self.groupchat_name, event
       )
-      print("Hello")
+    
       self.update_online_users()
-      print("Hello2")
-      
+    
     except Exception as e:
       print(f"Error receiving message: {e}")
       self.close()
@@ -83,15 +77,26 @@ class GroupChatConsumer(WebsocketConsumer):
     self.send(text_data=html)
     
   def update_online_users(self):
+    allUsers = User.objects.all()
     online_users = self.groupchat.users_online.all()
+    members = self.groupchat.members.all() or allUsers
     online_users_with_avatars = []
-    
-    for user in online_users:
-      profile = Profile.objects.get(user=user)
-      online_users_with_avatars.append({
-        'username':user.username,
-        'avatar':profile.avatar,
-      })
+    for user in members:
+      if user in online_users:
+        profile = Profile.objects.get(user=user)
+        online_users_with_avatars.append({
+          'username':user.username,
+          'avatar':profile.avatar,
+          'status':'online'
+        })
+      else:
+        profile = Profile.objects.get(user=user)
+        online_users_with_avatars.append({
+          'username':user.username,
+          'avatar':profile.avatar,
+          'status':'offline'
+        })
+        
     
     event = {
         'type': 'online_users_handler',

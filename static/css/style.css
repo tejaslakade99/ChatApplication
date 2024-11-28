@@ -321,6 +321,14 @@ section {
   border-radius: 10px;
 }
 
+.chat-participants{
+  flex: 1;
+}
+
+.chat-participants{
+  flex: 1;
+}
+
 .chat-participants ul {
   display: grid;
   gap: 1rem;

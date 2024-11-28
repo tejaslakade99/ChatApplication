@@ -6,11 +6,16 @@ import shortuuid
 # Create your models here.
 class GroupChat(models.Model):
   group_name = models.CharField(max_length=128, unique=True, default=shortuuid.uuid)
+  group_avatar = models.URLField(max_length=500, blank=True, null=True, default='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
+  group_chat_name = models.CharField(max_length=128,null=True, blank=True)
+  admin = models.ForeignKey(User,null=True,blank=True, on_delete=models.SET_NULL)
   users_online = models.ManyToManyField(User, related_name='online_in_groups', blank=True)
   members = models.ManyToManyField(User, related_name='chat_groups', blank=True)
   is_private = models.BooleanField(default=False)
 
   def __str__(self):
+    if self.group_chat_name:
+      return self.group_name + f'[{self.group_chat_name}]' 
     return self.group_name
 
 

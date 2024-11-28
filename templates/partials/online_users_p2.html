@@ -1,0 +1,9 @@
+{% for ouser in online_users %}
+<li>
+  <div class="chat-participants-avatar">
+    <img src="{{ ouser.avatar }}" width="80px" height="80px" alt="User Avatar">
+    <span class="status-dot {{ouser.status}}"></span>
+  </div>
+  <p>{{ ouser.username }}</p>
+</li>
+{% endfor %}
