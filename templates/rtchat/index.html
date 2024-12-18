@@ -91,7 +91,7 @@
               <div class="chat-details">
                 <h3>For Everyone</h3>
                 <p>{{ friendsGroup.body|default:"No messages yet"|slice:":30" }}{% if friendsGroup.body|length > 20%}...
-                {% endif %}</p>
+                  {% endif %}</p>
               </div>
             </dix>
             <p class="time">{{friendsGroup.created|date:"h:i A"}}</p>
@@ -111,18 +111,21 @@
           {% endfor %}
 
           {% for chat in all_group_chats %}
-          <li onclick="redirectToLink('/chat/room/{{chat.group_name}}')">
-            <dix class="chat-person-info">
-              <img src="{{chat.group_avatar}}" alt="Tony Stark" class="chat-avatar">
+          <li onclick="redirectToLink('/chat/room/{{ chat.group_name }}')">
+            <div class="chat-person-info">
+              <img src="{{ chat.group_avatar }}" alt="Group Avatar" class="chat-avatar">
               <div class="chat-details">
-                <h3>{{chat.group_chat_name}}</h3>
-                <p>{{ chat.last_message|default:"No messages yet"|slice:":30" }}{% if chat.last_message|length > 20%}...{% endif %}
+                <h3>{{ chat.group_chat_name }}</h3>
+                <p>
+                  {{ chat.last_message|default:"No messages yet"|slice:":30" }}
+                  {% if chat.last_message|length > 30 %}...{% endif %}
                 </p>
               </div>
-            </dix>
-            <p class="time">{{chat.time|date:"h:i A"}}</p>
+            </div>
+            <p class="time">{{ chat.time|date:"h:i A" }}</p>
           </li>
           {% endfor %}
+
           <!-- Repeat other chat list items as needed -->
         </ul>
       </div>
