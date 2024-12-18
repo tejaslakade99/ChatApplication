@@ -9,11 +9,14 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
+import environ
 from pathlib import Path
-from environ import Env
-env = Env()
-Env.read_env()
+
+env = environ.Env()
+if os.path.exists('.env'):
+    environ.Env.read_env()
+
 
 ENVIRONMENT = env('ENVIRONMENT', default='production')
 
