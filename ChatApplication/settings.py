@@ -103,11 +103,25 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'ChatApplication.wsgi.application'
 ASGI_APPLICATION = 'ChatApplication.asgi.application'
 
+# Local setup: Use InMemoryChannelLayer for local development and testing only.
+# This should not be used in production as it does not support multi-process communication or persistence.
+
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
-    }
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('redis://default:frXdbHpCixOtvZNwhmFMKSkcxBpqMZKy@:6379')],
+        },
+    },
 }
+
+if ENVIRONMENT == 'development':
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
