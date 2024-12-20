@@ -18,9 +18,10 @@ class GroupChatConsumer(WebsocketConsumer):
 
     # add and update online users
     if self.user not in self.groupchat.users_online.all():
-      self.groupchat.users_online.add(self.user)
-      self.groupchat.save() 
-      self.update_online_users()
+      if isinstance(self.user, User):
+        self.groupchat.users_online.add(self.user)
+        self.groupchat.save() 
+        self.update_online_users()
     
     print("Online users after connect:", self.groupchat.users_online.all())
     self.accept()
