@@ -155,7 +155,7 @@
           {% endfor %}
         </ul>
       </div>
-      <form id="chat-input" class="chat-input" hx-ext="ws" ws-connect="/chat/room/{{group_name}}/" ws-send
+      <form id="chat-input" class="chat-input" hx-ext="ws" ws-connect="/ws/groupchat/{{group_name}}/" ws-send
         _="on htmx:wsAfterSend reset() me">
         {% csrf_token %}
         {{ form.body }}
