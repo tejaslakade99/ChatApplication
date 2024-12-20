@@ -1,1 +1,1 @@
-web: gunicorn ChatApplication.asgi
+web: daphane ChatApplication.asgi:application
