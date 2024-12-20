@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 import environ
 from pathlib import Path
+import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
-if os.path.exists('.env'):
-    environ.Env.read_env()
-
+environ.Env.read_env(BASE_DIR / '.env')
 
 ENVIRONMENT = env('ENVIRONMENT', default='production')
 
@@ -134,6 +135,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_DB', default='your_db_name'),
+        'USER': env('POSTGRES_USER', default='your_username'),
+        'PASSWORD': env('POSTGRES_PASSWORD', default='your_password'),
+        'HOST': env('POSTGRES_HOST', default='your_host'),
+        'PORT': env('POSTGRES_PORT', default='5432'),
+    }
+}
+
 
 
 # Password validation
