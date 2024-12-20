@@ -110,8 +110,9 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('default', 6379)],
-            "password": "frXdbHpCixOtvZNwhmFMKSkcxBpqMZKy",  # Redis password
+            "hosts": [
+                "redis://default:zPHfcKbelpEqIwtWfhZkThMomarLnEmC@redis.railway.internal:6379"
+            ],
         },
     },
 }
