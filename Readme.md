@@ -85,7 +85,7 @@ For a detailed walkthrough of the application and its features, please refer to 
 
 ### Chat Room View
 
-![Chat Room](https://drive.google.com/file/d/1zSmkYYXMwZqCxQMbYKHMJHSrMQ-Uek6B/view?usp=sharing)
+![Chat Room](https://github.com/tejaslakade99/tejaslakade99.github.io/blob/main/Github-Project-Images/Chat-Application/Active.png?raw=true)
 
 ### Online Members View
 
