@@ -9,6 +9,7 @@ channels_redis==4.2.1
 constantly==23.10.4
 cryptography==43.0.3
 daphne==4.1.2
+dj-database-url==2.3.0
 Django==4.2.16
 django-allauth==65.2.0
 django-auth==0.1.9
