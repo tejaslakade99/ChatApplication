@@ -1,1 +1,2 @@
+release: python manage.py migrate
 web: daphne ChatApplication.asgi:application -b 0.0.0.0 -p $PORT
