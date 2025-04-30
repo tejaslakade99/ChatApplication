@@ -9,27 +9,25 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-import os
-import environ
+
+from dotenv import load_dotenv
+load_dotenv()
 from pathlib import Path
 import os
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-env = environ.Env()
-environ.Env.read_env(BASE_DIR / '.env')
-
-ENVIRONMENT = env('ENVIRONMENT', default='production')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+if os.getenv('ENVIRONMENT') == 'development':
+    load_dotenv(BASE_DIR / '.env')
+
+ENVIRONMENT = os.getenv('ENVIRONMENT', default='production')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY', default="django-insecure-2%wk8sl@bg1059$z68!-v+$w3cc-(c1ryrux%uug6pta4ddv!@")
+SECRET_KEY = os.getenv('SECRET_KEY', default="django-insecure-2%wk8sl@bg1059$z68!-v+$w3cc-(c1ryrux%uug6pta4ddv!@")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=False
@@ -139,11 +137,11 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB', default='your_db_name'),
-        'USER': env('POSTGRES_USER', default='your_username'),
-        'PASSWORD': env('POSTGRES_PASSWORD', default='your_password'),
-        'HOST': env('POSTGRES_HOST', default='your_host'),
-        'PORT': env('POSTGRES_PORT', default='5432'),
+        'NAME': os.getenv('POSTGRES_DB', default='your_db_name'),
+        'USER': os.getenv('POSTGRES_USER', default='your_username'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='your_password'),
+        'HOST': os.getenv('POSTGRES_HOST', default='your_host'),
+        'PORT': os.getenv('POSTGRES_PORT', default='5432'),
     }
 }
 
