@@ -12,18 +12,18 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from dotenv import load_dotenv
 import dj_database_url
-load_dotenv()
 from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()
 if os.getenv('ENVIRONMENT') == 'development':
     load_dotenv(BASE_DIR / '.env')
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', default='production')
-
+print("ENVIRONMENT:", os.getenv('ENVIRONMENT'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
