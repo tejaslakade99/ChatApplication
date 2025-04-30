@@ -9,26 +9,27 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
-from dotenv import load_dotenv
-import dj_database_url
-load_dotenv()
+import os
+import environ
 from pathlib import Path
 import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+environ.Env.read_env(BASE_DIR / '.env')
+
+ENVIRONMENT = env('ENVIRONMENT', default='production')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-if os.getenv('ENVIRONMENT') == 'development':
-    load_dotenv(BASE_DIR / '.env')
-
-ENVIRONMENT = os.getenv('ENVIRONMENT', default='production')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', default="django-insecure-2%wk8sl@bg1059$z68!-v+$w3cc-(c1ryrux%uug6pta4ddv!@")
+SECRET_KEY = env('SECRET_KEY', default="django-insecure-2%wk8sl@bg1059$z68!-v+$w3cc-(c1ryrux%uug6pta4ddv!@")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG=False
@@ -128,17 +129,23 @@ if ENVIRONMENT == 'development':
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if ENVIRONMENT == 'development':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
+}
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_DB', default='your_db_name'),
+        'USER': env('POSTGRES_USER', default='your_username'),
+        'PASSWORD': env('POSTGRES_PASSWORD', default='your_password'),
+        'HOST': env('POSTGRES_HOST', default='your_host'),
+        'PORT': env('POSTGRES_PORT', default='5432'),
     }
+}
 
 
 
