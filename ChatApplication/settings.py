@@ -1,105 +1,130 @@
-from pathlib import Path
-from dotenv import load_dotenv
 import os
+from pathlib import Path
+import environ
 
-# Build paths inside the project
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load .env only if it exists (i.e., during local dev)
-dotenv_path = BASE_DIR / '.env'
-if dotenv_path.exists():
-    load_dotenv(dotenv_path)
 
-# Get environment variables
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
-SECRET_KEY = os.getenv('SECRET_KEY')
+# Environment
+ENVIRONMENT = os.getenv("ENVIRONMENT", default="production")
+print("ENVIRONMENT:", ENVIRONMENT)
 
-# Hosts
-ALLOWED_HOSTS = ['*']
+# Security
+SECRET_KEY = os.getenv("SECRET_KEY", default="django-insecure-2%wk8sl@bg1059$z68!-v+$w3cc-(c1ryrux%uug6pta4ddv!@")
+DEBUG = ENVIRONMENT == "development"
+ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["https://*.railway.app"]
 
-# Database setup
-if ENVIRONMENT == 'development':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('PGDATABASE', 'railway'),
-            'USER': os.getenv('PGUSER', 'postgres'),
-            'PASSWORD': os.getenv('PGPASSWORD'),
-            'HOST': os.getenv('PGHOST'),
-            'PORT': os.getenv('PGPORT', '5432'),
-        }
-    }
+# Installed apps
+INSTALLED_APPS = [
+    "daphne",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rtchat.apps.RtchatConfig",
+    "django_htmx",
+    "allauth",
+    "allauth.account",
+]
 
-# Redis setup
-if ENVIRONMENT == 'production':
-    CHANNEL_LAYERS = {
-        "default": {
-            "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {
-                "hosts": [os.getenv('REDIS_URL')],
-            },
+# Middleware
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
+]
+
+# Authentication
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
+
+# Templates
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+# URL routing
+ROOT_URLCONF = "ChatApplication.urls"
+ASGI_APPLICATION = "ChatApplication.asgi.application"
+
+# Channel Layers
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                os.getenv("REDIS_URL", default="redis://localhost:6379")
+            ]
         },
     }
-else:
+}
+
+if ENVIRONMENT == "development":
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels.layers.InMemoryChannelLayer"
         }
     }
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+# Database
+if ENVIRONMENT == "development":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": os.getenv("DATABASE_URL")
+    }
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
 USE_I18N = True
-
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# Static files
+STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# Auth settings
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/accounts/login/"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
